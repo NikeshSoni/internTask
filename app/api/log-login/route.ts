@@ -1,30 +1,29 @@
-
-
-// app/api/log-login/route.ts
-import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
+
   try {
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl) {
+      throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
+    }
+
+    if (!serviceRoleKey) {
+      throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
+    }
+
+    const supabase = createClient(
+      supabaseUrl,
+      serviceRoleKey
+    );
 
     const body = await req.json();
 
     const { user_id, email } = body;
-
-    if (!user_id || !email) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Missing fields",
-        },
-        { status: 400 }
-      );
-    }
 
     const { data, error } = await supabase
       .from("login_logs")
@@ -36,6 +35,7 @@ export async function POST(req: Request) {
       ]);
 
     if (error) {
+
       console.log(error);
 
       return NextResponse.json(
@@ -43,7 +43,9 @@ export async function POST(req: Request) {
           success: false,
           error,
         },
-        { status: 500 }
+        {
+          status: 500,
+        }
       );
     }
 
@@ -59,9 +61,11 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: "Internal Server Error",
+        error: String(err),
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }
