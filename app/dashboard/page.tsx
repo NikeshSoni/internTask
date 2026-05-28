@@ -1,9 +1,6 @@
-// Add this at the very top of dashboard/page.tsx
-
-
 "use client";
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from "react";
 import { supabaseAdmin } from "../lib/supabase";
