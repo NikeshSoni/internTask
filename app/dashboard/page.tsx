@@ -1,24 +1,26 @@
-// Add this at the very top of dashboard/page.tsx
-
-
 "use client";
-export const dynamic = 'force-dynamic';
+
+export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
-import { supabaseAdmin } from "../lib/supabase";
+import { getSupabaseClient } from "../lib/supabase";
 
 export default function Dashboard() {
 
   const [logs, setLogs] = useState<any[]>([]);
 
+  const supabase = getSupabaseClient();
+
   useEffect(() => {
 
     const load = async () => {
+
       try {
+
         const {
           data: { user },
           error: userError,
-        } = await supabaseAdmin.auth.getUser();
+        } = await supabase.auth.getUser();
 
         console.log(user, "USER");
 
@@ -31,6 +33,7 @@ export default function Dashboard() {
           console.log("No user found");
           return;
         }
+
         // Call API
         const response = await fetch("/api/log-login", {
           method: "POST",
@@ -44,18 +47,20 @@ export default function Dashboard() {
         });
 
         const result = await response.json();
+
         console.log(result, "API RESULT");
+
         // Fetch Logs
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await supabase
           .from("login_logs")
           .select("*")
           .order("login_time", { ascending: false });
+
         console.log(data, "DATA");
         console.log(error, "ERROR");
 
         if (error) {
           console.log(error);
-
           return;
         }
 
@@ -66,6 +71,7 @@ export default function Dashboard() {
         console.log(err);
 
       }
+
     };
 
     load();
@@ -74,13 +80,25 @@ export default function Dashboard() {
 
   return (
     <div className="p-10">
-      <h1 className="text-3xl font-bold mb-5"> Dashboard </h1>
+      <h1 className="text-3xl font-bold mb-5">
+        Dashboard
+      </h1>
+
       <div className="space-y-3">
-        {logs.map((log) => (<div key={log.id} className="border p-4 rounded-xl" >
-          <p>{log.email}</p>
-          <p>{log.login_time}</p>
-        </div>))} 
-      </div> 
+
+        {logs.map((log) => (
+
+          <div
+            key={log.id}
+            className="border p-4 rounded-xl"
+          >
+            <p>{log.email}</p>
+            <p>{log.login_time}</p>
+          </div>
+
+        ))}
+
+      </div>
     </div>
   );
 }

@@ -1,11 +1,13 @@
 "use client";
 
-import { supabaseAdmin } from "../lib/supabase";
+import { getSupabaseClient } from "../lib/supabase";
 
 export default function LoginButton() {
 
+  const supabase = getSupabaseClient();
+
   const login = async () => {
-    await supabaseAdmin.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/dashboard`,
