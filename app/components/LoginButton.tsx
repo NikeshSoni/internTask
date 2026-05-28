@@ -8,7 +8,7 @@ export default function LoginButton() {
     await supabaseAdmin.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: ``,
+        redirectTo: `${window.location.origin}/dashboard`,
       },
     });
   };
