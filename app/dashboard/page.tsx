@@ -10,9 +10,7 @@ export default function Dashboard() {
   useEffect(() => {
 
     const load = async () => {
-
       try {
-
         // Get User
         const {
           data: { user },
@@ -30,7 +28,6 @@ export default function Dashboard() {
           console.log("No user found");
           return;
         }
-
         // Call API
         const response = await fetch("/api/log-login", {
           method: "POST",
@@ -44,19 +41,12 @@ export default function Dashboard() {
         });
 
         const result = await response.json();
-
         console.log(result, "API RESULT");
-
-
         // Fetch Logs
         const { data, error } = await supabaseAdmin
           .from("login_logs")
           .select("*")
           .order("login_time", { ascending: false });
-
-
-
-
         console.log(data, "DATA");
         console.log(error, "ERROR");
 
@@ -80,10 +70,12 @@ export default function Dashboard() {
   }, []);
 
   return (
+    // <div className="p-10"> <h1 className="text-3xl font-bold mb-5"> Dashboard </h1> <div className="space-y-3"> {logs.map((log) => (<div key={log.id} className="border p-4 rounded-xl" > <p>{log.email}</p> <p>{log.login_time}</p> </div>))} </div> </div>
     <div className="min-h-screen bg-gray-100 p-6">
 
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <div className="">
+        <div>
           <h1 className="text-4xl font-bold text-gray-800">
             Login Dashboard
           </h1>
@@ -103,6 +95,8 @@ export default function Dashboard() {
           </h2>
         </div>
       </div>
+
+      {/* Logs */}
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
 
         {logs.map((log) => (
