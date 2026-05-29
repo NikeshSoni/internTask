@@ -8,7 +8,7 @@ export default function LoginButton() {
     await supabaseAdmin.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://intern-task-ewm6.vercel.app/auth/callback",
+        redirectTo: "https://intern-task-ewm6.vercel.app/auth/v1/callback",
       },
     });
   };
